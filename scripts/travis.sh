@@ -31,6 +31,7 @@ sudo add-apt-repository -y ppa:webupd8team/java # java
 sudo add-apt-repository -y ppa:hvr/ghc          # ghc, cabal, happy, alex
 sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test # gcc-4.8
 sudo add-apt-repository -y ppa:george-edison55/precise-backports # cmake
+sudo add-apt-repository -y ppa:git-core/ppa # git
 sudo apt-get update
 
 
@@ -40,12 +41,6 @@ echo "************************************************************"
 
 #sudo apt-get install -y ghc-7.8.4 cabal-install-1.22 alex-3.1.4 happy-1.19.5
 sudo apt-get install -y ghc cabal-install alex happy
-
-echo "************************************************************"
-echo "Install Haskell Tool Stack"
-echo "************************************************************"
-
-curl -sSL https://get.haskellstack.org/ | sh
 
 echo "************************************************************"
 echo "Install Java 8"
@@ -81,7 +76,8 @@ sudo apt-get -y --force-yes install \
     libsqlite3-dev \
     libcunit1-dev \
     clang-3.4 \
-    expect
+    expect \
+    curl
 
 # check for ubuntu version before installing uboot tools
 string=`lsb_release -c`;
@@ -99,7 +95,8 @@ echo "************************************************************"
 echo "Install stack"
 echo "************************************************************"
 mkdir -p $PWD/.local/bin
-curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $PWD/.local/bin '*/stack'
+#curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C $PWD/.local/bin '*/stack'
+curl -L https://github.com/commercialhaskell/stack/releases/download/v1.4.0/stack-1.4.0-linux-x86_64-static.tar.gz | tar xz --wildcards --strip-components=1 -C $PWD/.local/bin '*/stack'
 
 echo "************************************************************"
 echo "Install gcc-arm-embedded"
@@ -107,5 +104,12 @@ echo "************************************************************"
 
 mkdir -p gcc-arm-embedded
 wget https://launchpad.net/gcc-arm-embedded/4.9/4.9-2015-q2-update/+download/gcc-arm-none-eabi-4_9-2015q2-20150609-linux.tar.bz2 -O- | tar xjf - -C gcc-arm-embedded
+
+echo "************************************************************"
+echo "Install repo"
+echo "************************************************************"
+
+sudo curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo
+sudo chmod a+x /usr/local/bin/repo
 
 echo "$PWD:$PWD/.local/bin:$(echo $PWD/gcc-arm-embedded/*/bin):/opt/ghc/7.8.4/bin:/opt/cabal/1.22/bin:/opt/alex/3.1.4/bin:/opt/happy/1.19.5/bin:$PATH" >PATH
